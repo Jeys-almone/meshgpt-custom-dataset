@@ -1,4 +1,4 @@
-from pathlib import Path
+﻿from pathlib import Path
 import sys
 
 import torch
@@ -76,10 +76,10 @@ trainer = MeshTransformerTrainer(
     data_kwargs=["vertices", "faces"]
 )
 
-trainer.train()
+trainer()
 
 Path("models").mkdir(exist_ok=True)
 torch.save(transformer.state_dict(), "models/transformer_all_meshes.pt")
 
-print("Treinamento do Transformer concluído!")
+print("Treinamento do Transformer concluÃ­do!")
 print("Modelo salvo em models/transformer_all_meshes.pt")
