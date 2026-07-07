@@ -158,3 +158,29 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+
+# =====================================================
+# Custom project (UFMA - MeshGPT with custom dataset)
+# =====================================================
+
+# Point-E model cache (downloaded automatically)
+point_e_model_cache/
+
+# Intermediate checkpoints (can be regenerated)
+models/transformer_checkpoints/
+
+# Final transformer model (available separately due to GitHub file size limit)
+models/transformer_all_meshes.pt
+
+# Automatically generated meshes
+generated_meshes/
+
+# Automatically generated evaluation metrics
+evaluation/metrics/
+
+# Blender backup files
+*.blend1
+
+# Temporary files
+*.tmp
+*.bak
