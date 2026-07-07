@@ -4,74 +4,95 @@
 
 Implementation and experimental evaluation of **MeshGPT** using a custom dataset composed of real-world objects reconstructed through photogrammetry.
 
-This repository extends the original implementation of MeshGPT by providing a complete experimental pipeline for dataset preparation, mesh processing, model training, mesh generation and quantitative evaluation.
+This repository extends the original implementation of MeshGPT by providing a complete workflow for preparing a custom dataset, training the model, generating novel triangle meshes, and evaluating the generated results using quantitative geometric metrics.
+
+> **This repository is intended for research and educational purposes**, providing a fully reproducible pipeline for training MeshGPT with custom data.
 
 ---
 
-## Original Project
+## Overview
 
-This work is based on the original implementation developed by **Phil Wang (lucidrains)**:
+MeshGPT is a generative model capable of synthesizing triangle meshes using a decoder-only Transformer architecture.
 
-https://github.com/lucidrains/meshgpt-pytorch
+While the original repository focuses on the implementation of the model itself, this repository extends the project with an end-to-end experimental pipeline that includes:
 
-The original implementation provides the MeshGPT architecture proposed in:
-
-> Siddiqui et al. *MeshGPT: Generating Triangle Meshes with Decoder-Only Transformers*, 2023.
-
----
-
-# Repository Objectives
-
-The main objective of this repository is to reproduce and evaluate MeshGPT using a **small custom dataset** obtained from real objects.
-
-The experimental workflow includes:
-
-- image acquisition
-- background removal
-- photogrammetric reconstruction
-- mesh augmentation
-- mesh simplification
+- Image acquisition
+- Background removal
+- Photogrammetric reconstruction
+- Mesh preprocessing
+- Data augmentation
+- Mesh simplification
 - MeshGPT training
-- mesh generation
-- quantitative evaluation
-- comparison with Point-E
+- Mesh generation
+- Quantitative evaluation
+- Comparison with Point-E
+
+The entire workflow adopted in our research is documented in this repository, allowing anyone to reproduce the experiments using their own dataset.
+
+---
+
+# Repository Highlights
+
+✔ Complete experimental pipeline
+
+✔ Custom dataset support
+
+✔ Automatic background removal
+
+✔ Meshroom integration
+
+✔ Mesh augmentation
+
+✔ Mesh simplification
+
+✔ MeshGPT Autoencoder training
+
+✔ MeshGPT Transformer training
+
+✔ Novel mesh generation
+
+✔ Quantitative evaluation
+
+✔ Comparison with Point-E
+
+✔ Research-oriented implementation
 
 ---
 
 # Experimental Pipeline
 
-```
-Image Acquisition
-        │
-        ▼
-Background Removal
-        │
-        ▼
-Photogrammetry (Meshroom)
-        │
-        ▼
-OBJ Mesh Export
-        │
-        ▼
-Mesh Augmentation
-        │
-        ▼
-Mesh Simplification
-        │
-        ▼
-Mesh Autoencoder Training
-        │
-        ▼
-Mesh Transformer Training
-        │
-        ▼
-Mesh Generation
-        │
-        ▼
-Evaluation
-        │
-        ▼
-Comparison with Point-E
+```text
+                     Image Acquisition
+                             │
+                             ▼
+                  Background Removal
+                             │
+                             ▼
+               Photogrammetry (Meshroom)
+                             │
+                             ▼
+                Reconstructed Triangle Meshes
+                             │
+                             ▼
+                    Mesh Data Augmentation
+                             │
+                             ▼
+                     Mesh Simplification
+                             │
+                             ▼
+               Mesh Autoencoder Training
+                             │
+                             ▼
+              Mesh Transformer Training
+                             │
+                             ▼
+                 Novel Mesh Generation
+                             │
+                             ▼
+                  Quantitative Evaluation
+                             │
+                             ▼
+                  Comparison with Point-E
 ```
 
 ---
@@ -79,27 +100,49 @@ Comparison with Point-E
 # Repository Structure
 
 ```
-comparison/
-dataset/
-dataset_sem_fundo/
-evaluation/
-generated_meshes/
-meshes/
-meshes_augmented/
-meshes_simplified/
-meshgpt_pytorch/
-models/
-scripts/
-tests/
+meshgpt-custom-dataset
+│
+├── comparison/
+├── dataset/
+├── dataset_sem_fundo/
+├── evaluation/
+├── generated_meshes/
+├── meshes/
+├── meshes_augmented/
+├── meshes_simplified/
+├── meshgpt_pytorch/
+├── models/
+├── point_e_model_cache/
+├── scripts/
+├── tests/
+│
+├── manifest_dataset.csv
+├── setup.py
+└── README.md
 ```
 
-A detailed description of each folder is presented in the next sections.
+The repository is organized into independent modules, each responsible for one stage of the experimental workflow.
+
+| Directory | Description |
+|------------|-------------|
+| **comparison/** | Scripts responsible for quantitative evaluation and comparison between methods. |
+| **dataset/** | Original photographs used for photogrammetric reconstruction. |
+| **dataset_sem_fundo/** | Images after background removal. |
+| **meshes/** | Original meshes reconstructed from Meshroom. |
+| **meshes_augmented/** | Meshes generated through data augmentation. |
+| **meshes_simplified/** | Simplified meshes used during training. |
+| **generated_meshes/** | Meshes generated by the trained MeshGPT model. |
+| **evaluation/** | Real meshes, generated meshes and evaluation outputs. |
+| **models/** | Trained Autoencoder and Transformer models. |
+| **scripts/** | Complete preprocessing, training and inference scripts. |
+| **comparison/** | Evaluation metrics and comparison scripts. |
+| **tests/** | Auxiliary scripts used for testing the implementation. |
 
 ---
 
 # Installation
 
-Clone the repository
+## Clone the repository
 
 ```bash
 git clone https://github.com/Jeys-almone/meshgpt-custom-dataset.git
@@ -107,7 +150,7 @@ git clone https://github.com/Jeys-almone/meshgpt-custom-dataset.git
 cd meshgpt-custom-dataset
 ```
 
-Create the environment
+## Create the Conda environment
 
 ```bash
 conda create -n meshgpt python=3.10
@@ -115,7 +158,13 @@ conda create -n meshgpt python=3.10
 conda activate meshgpt
 ```
 
-Install dependencies
+## Install the project
+
+```bash
+pip install -e .
+```
+
+or
 
 ```bash
 pip install -r requirements.txt
@@ -123,82 +172,232 @@ pip install -r requirements.txt
 
 ---
 
+# Hardware Requirements
+
+The experiments were conducted using:
+
+- Python 3.10
+- PyTorch
+- CUDA (optional)
+- Meshroom
+- Blender (optional)
+- Trimesh
+- Open3D
+
+Training can also be performed using CPU, although execution time will increase considerably.
+
+---
+
 # Experimental Workflow
 
-The complete experimental pipeline adopted in this work is divided into the following stages.
+The complete workflow is divided into nine major stages.
 
 1. Dataset preparation
 
 2. Background removal
 
-3. 3D reconstruction using Meshroom
+3. Photogrammetric reconstruction
 
-4. Mesh augmentation
+4. Mesh preprocessing
 
-5. Mesh simplification
+5. MeshGPT training
 
-6. Autoencoder training
+6. Mesh generation
 
-7. Transformer training
+7. Point-E generation
 
-8. Mesh generation
+8. Quantitative evaluation
 
-9. Quantitative evaluation
+9. Result analysis
 
-10. Comparison with Point-E
+Each stage is explained in detail in the following sections.
+# Running the Complete Pipeline
 
-Each step is described in detail throughout this documentation.
+The project is divided into sequential stages. Follow the steps below to reproduce the experiments.
 
 ---
 
-# Results
+## Step 1 — Prepare the Dataset
 
-The repository contains:
+Place the object images inside the `dataset/` directory.
 
-- Original images
-- Background-free images
-- Reconstructed meshes
-- Augmented meshes
-- Simplified meshes
-- Trained models
-- Generated meshes
-- Quantitative evaluation scripts
+Example:
 
-The evaluation employs:
+```
+dataset/
+├── ArturAzevedoBusto/
+├── fotos_canhao/
+├── Leao/
+└── Postes/
+```
+
+Each object should be stored in its own folder.
+
+---
+
+## Step 2 — Remove Background
+
+Run:
+
+```bash
+python scripts/remove_background.py
+```
+
+The processed images will be saved in:
+
+```
+dataset_sem_fundo/
+```
+
+---
+
+## Step 3 — Reconstruct the Meshes
+
+Import the images from `dataset_sem_fundo/` into **Meshroom**.
+
+After reconstruction, export each object as an `.obj` file and place the meshes inside:
+
+```
+meshes/
+```
+
+---
+
+## Step 4 — Verify the Dataset
+
+Check whether the meshes were correctly exported.
+
+```bash
+python scripts/check_meshes.py
+```
+
+---
+
+## Step 5 — Data Augmentation
+
+Increase the number of training samples.
+
+```bash
+python scripts/augment_all_meshes.py
+```
+
+Generated meshes will be stored in:
+
+```
+meshes_augmented/
+```
+
+---
+
+## Step 6 — Simplify the Meshes
+
+Reduce mesh complexity before training.
+
+```bash
+python scripts/simplify_meshes.py
+```
+
+Output:
+
+```
+meshes_simplified/
+```
+
+---
+
+## Step 7 — Train the Autoencoder
+
+```bash
+python scripts/train_autoencoder.py
+```
+
+The trained model will be saved in:
+
+```
+models/autoencoder_all_meshes.pt
+```
+
+---
+
+## Step 8 — Train the Transformer
+
+```bash
+python scripts/train_transformer.py
+```
+
+The trained transformer will be stored in:
+
+```
+models/transformer_all_meshes.pt
+```
+
+---
+
+## Step 9 — Generate Meshes
+
+```bash
+python scripts/generate_mesh.py
+```
+
+Generated meshes will be saved in:
+
+```
+generated_meshes/
+```
+
+---
+
+## Step 10 — Generate Point-E Results
+
+```bash
+python comparison/generate_pointe.py
+```
+
+Generated files will be saved in:
+
+```
+evaluation/point_e/
+```
+
+---
+
+## Step 11 — Evaluate the Results
+
+Run the comparison script:
+
+```bash
+python comparison/compare_models.py
+```
+
+The following metrics are computed:
 
 - Chamfer Distance
 - Minimum Matching Distance (MMD)
 - Coverage (COV)
 - 1-Nearest Neighbor Accuracy (1-NNA)
 
----
+Results are exported to:
 
-# Acknowledgments
-
-This project is based on the original MeshGPT implementation developed by Phil Wang (lucidrains).
-
-We also acknowledge the authors of MeshGPT for making their work publicly available.
-
----
-
-# Citation
-
-If you use this repository, please cite the original MeshGPT paper.
-
-```bibtex
-@inproceedings{Siddiqui2023MeshGPTGT,
-    title   = {MeshGPT: Generating Triangle Meshes with Decoder-Only Transformers},
-    author  = {Yawar Siddiqui and Antonio Alliegro and Alexey Artemov and Tatiana Tommasi and Daniele Sirigatti and Vladislav Rosov and Angela Dai and Matthias Nie{\ss}ner},
-    year    = {2023}
-}
+```
+evaluation/metrics/
 ```
 
 ---
 
-# Authors
+# Troubleshooting
 
-Jeysraelly Almone
+**No images found**
 
-Universidade Federal do Maranhão (UFMA)
+Verify that the images are inside the `dataset/` directory.
 
-Research project developed for the evaluation of MeshGPT using a custom small-scale dataset.
+**Empty mesh**
+
+Check whether the mesh was correctly exported from Meshroom.
+
+**Point-E produces point clouds only**
+
+This is expected. Point-E does not generate triangle meshes by default, therefore quantitative metrics requiring mesh surfaces cannot be directly computed.
+
+**CUDA Out of Memory**
+
+Reduce the batch size or run the scripts on CPU.
